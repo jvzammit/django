@@ -348,7 +348,9 @@ Django uses PostgreSQL's identity columns to store auto-incrementing primary
 keys. An identity column is populated with values from a `sequence`_ that keeps
 track of the next available value. Manually assigning a value to an
 auto-incrementing field doesn't update the field's sequence, which might later
-cause a conflict. For example::
+cause a conflict. For example:
+
+.. code-block:: pycon
 
     >>> from django.contrib.auth.models import User
     >>> User.objects.create(username='alice', pk=1)
@@ -491,7 +493,9 @@ This needs to be done just once for your MySQL server, not per database.
 Creating your database
 ----------------------
 
-You can `create your database`_ using the command-line tools and this SQL::
+You can `create your database`_ using the command-line tools and this SQL:
+
+.. code-block:: sql
 
   CREATE DATABASE <dbname> CHARACTER SET utf8;
 
@@ -571,6 +575,7 @@ Here's a sample configuration which uses a MySQL option file::
         }
     }
 
+.. code-block:: ini
 
     # my.cnf
     [client]
@@ -641,7 +646,9 @@ If you're using a hosting service and can't change your server's default
 storage engine, you have a couple of options.
 
 * After the tables are created, execute an ``ALTER TABLE`` statement to
-  convert a table to a new storage engine (such as InnoDB)::
+  convert a table to a new storage engine (such as InnoDB):
+
+  .. code-block:: sql
 
       ALTER TABLE <tablename> ENGINE=INNODB;
 
@@ -721,7 +728,9 @@ includes a fractional indication (e.g. ``DATETIME(6)``).
 Django will not upgrade existing columns to include fractional seconds if the
 database server supports it. If you want to enable them on an existing database,
 it's up to you to either manually update the column on the target database, by
-executing a command like::
+executing a command like:
+
+.. code-block:: sql
 
     ALTER TABLE `your_table` MODIFY `your_datetime_column` DATETIME(6)
 
@@ -1007,14 +1016,22 @@ using RAC or pluggable databases without ``tnsnames.ora``, for example.
 
 Example of an Easy Connect string::
 
-    'NAME': 'localhost:1521/orclpdb1',
+    {
+        # ...
+        'NAME': 'localhost:1521/orclpdb1',
+        # ...
+    }
 
 Example of a full DSN string::
 
-    'NAME': (
-        '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))'
-        '(CONNECT_DATA=(SERVICE_NAME=orclpdb1)))'
-    ),
+    {
+        # ...
+        'NAME': (
+            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))'
+            '(CONNECT_DATA=(SERVICE_NAME=orclpdb1)))'
+        ),
+        # ...
+    }
 
 Threaded option
 ---------------
@@ -1023,9 +1040,13 @@ If you plan to run Django in a multithreaded environment (e.g. Apache using the
 default MPM module on any modern operating system), then you **must** set
 the ``threaded`` option of your Oracle database configuration to ``True``::
 
-    'OPTIONS': {
-        'threaded': True,
-    },
+    {
+        # ...
+        'OPTIONS': {
+            'threaded': True,
+        },
+        # ...
+    }
 
 Failure to do this may result in crashes and other odd behavior.
 
@@ -1039,9 +1060,13 @@ inserting into a remote table, or into a view with an ``INSTEAD OF`` trigger.
 The ``RETURNING INTO`` clause can be disabled by setting the
 ``use_returning_into`` option of the database configuration to ``False``::
 
-    'OPTIONS': {
-        'use_returning_into': False,
-    },
+    {
+        # ...
+        'OPTIONS': {
+            'use_returning_into': False,
+        },
+        # ...
+    }
 
 In this case, the Oracle backend will use a separate ``SELECT`` query to
 retrieve ``AutoField`` values.
@@ -1117,7 +1142,9 @@ database backends to modify its behavior, features, or configuration.
 
 Consider, for example, that you need to change a single database feature.
 First, you have to create a new directory with a ``base`` module in it. For
-example::
+example:
+
+.. code-block:: shell
 
     mysite/
         ...
@@ -1148,7 +1175,7 @@ file::
     DATABASES = {
         'default': {
             'ENGINE': 'mydbengine',
-            ...
+            # ...
         },
     }
 
